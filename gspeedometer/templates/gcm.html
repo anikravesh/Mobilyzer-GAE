@@ -1,0 +1,12 @@
+{# GCM page template. #}
+
+{% extends "base.html" %}
+{% block body %}
+{% if devices %}
+{% include "gcm_devicelist.html" %}
+{% else %}
+<br><br>
+You don't have any devices currently uploading data to Mobiperf.
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+cron:
+- description: periodic archive of private data to GS
+  url: /admin/archive/cron
+  schedule: every 6 hours 
+  timezone: GMT
+  target: anonymization
+- description: periodic archive of private data to GS
+  url: /admin/archive/cron?anonymize=true
+  schedule: every 6 hours
+  timezone: GMT
+  target: anonymization
+- description: periodic update of Recent Measurement table
+  url: /admin/viscron
+  schedule: every 30 minutes
+  timezone: GMT
+  target: anonymization
+  

@@ -1,0 +1,126 @@
+{# Template for devices listing. #}
+  <script type= "text/javascript">
+	  function hideResults(device_id){
+		  document.getElementById(device_id).innerHTML=''; 
+		  document.getElementById(device_id+"_link").innerHTML='<a href="javascript:void(0)" onclick="showResults('  +"'"+device_id+"');"+ '">Show Results</a>'; 
+		  
+		  return false;
+	  }
+      function showResults(device_id){
+		  var xmlhttp;
+		  xmlhttp=new XMLHttpRequest();
+		  xmlhttp.onreadystatechange=function()
+		    {
+		    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		    {
+			  // document.getElementById(device_id).innerHTML='<td colspan="9">'+xmlhttp.responseText+'</td>'; 
+			  json_obj = JSON.parse(xmlhttp.responseText);
+			  // alert(json_obj.length);
+			  result=""
+			  for (i = 0; i < json_obj.length; i++) {
+				  timestamp="";
+				  type="";
+				  success="";
+				  val_result="";
+				  param_result="";
+				  for (var attrib in json_obj[i]) {
+				  	// alert(attrib + " = " + String(json_obj[i][attrib]));
+				    if (attrib=="success"){
+				  	  success=String(json_obj[i][attrib]);
+					}else if(attrib=="type"){
+					  type=json_obj[i][attrib];
+				  }else if(attrib=="timestamp"){
+				  	timestamp=json_obj[i][attrib];
+				  }else if(attrib=="values"){
+					  
+				  	for (var val_key in json_obj[i][attrib]) {
+				  		val_result=val_result+val_key+": "+json_obj[i][attrib][val_key]+"<br/>";
+				  	}
+				  }else if(attrib=="params"){
+					  for (var param_key in json_obj[i][attrib]) {
+			  			param_result=param_result+param_key+": "+json_obj[i][attrib][param_key]+"<br/>";
+			  	    }
+			      }
+					
+				  }
+result=result+"<tr><td>"+timestamp+"</td><td>"+type+"</td><td>"+success+"</td><td>"+param_result+"</td><td>"+val_result+"</td></tr>";
+
+				  
+  			  }
+			  
+			 if (result==""){
+				 result="No recent gcm result is received from this device.";
+				 result=result+'<a href="javascript:void(0)" onclick="showResults('  +"'"+device_id+"');"+ '">Refresh</a><br/>';
+
+			 }else{	
+				 result='<a href="javascript:void(0)" onclick="showResults('  +"'"+device_id+"');"+ '">Refresh</a><br/>'+"<table class='device-list-table section-box' width='100%'><tr><td>Timestamp</td><td>Type</td><td>Success</td><td>Parameters</td><td>Values</td></tr>"+result+"</table>";
+
+			 }
+			  
+			  
+
+			  document.getElementById(device_id).innerHTML='<td colspan="9">'+result+'</td>'; 
+			  // alert(result);
+		  	}
+		    }
+		  xmlhttp.open("GET","http://openmobiledata.appspot.com/admin/getgcmresults?device_id="+device_id,true);
+		  xmlhttp.send();
+		  document.getElementById(device_id).innerHTML='<td colspan="9"></td>'; 
+		  document.getElementById(device_id+"_link").innerHTML='<a href="javascript:void(0)" onclick="hideResults('  +"'"+device_id+"');"+ '">Hide Results</a>'; 
+          return false;
+      }
+</script>
+
+<form method="post" action="/admin/gcm?version=3.4.0">
+<div class="device-list-section">
+  <h2>Devices</h2>
+  
+  <table class="device-list-table section-box" width="100%">
+    <tr>
+      <th></th>
+      <th>ID</th>
+      <th>Last checkin</th>
+      <th>Owner</th>
+      <th>App version</th>
+      <th>Device</th>
+      <th>Android</th>
+      <th>Network</th>
+      <th>Last location</th>
+	  <th></th>
+    </tr>
+    {% for dev in devices %}
+      {% with dev.last_update as last_update %}
+      <tr>
+        <td><input type="checkbox" name="selected_device" value="{{last_update.registration_id}}"></td>
+        <td><a href="/device/view?device_id={{dev.key.name}}">{{dev.key.name}}</a></td>
+        <td>{{last_update.timestamp|timesince}} ago</td>
+        <td>{{dev.user.email}}</td>
+        <td>{{last_update.app_version}}</td>
+        <td>{{dev.manufacturer}} {{dev.model}}</td>
+        <td>{{dev.os}}</td>
+        <td>{{last_update.carrier}} {{last_update.network_type}}</td>
+        <td> <a href="http://maps.google.com/maps?q=loc:{{last_update.location.lat}},{{last_update.location.lon}}" target="_blank">{{last_update.location.lat}},{{last_update.location.lon}}</a></td>
+		<td>
+			{% if last_update.registration_id %}
+			<div id="{{dev.key.name}}_link">
+				<a href="javascript:void(0)" onclick="showResults('{{dev.key.name}}');">
+			  Show Results
+			  </a>
+		  </div>
+			   {% endif %}
+		</td>
+      </tr>
+	  <tr id="{{dev.key.name}}"></tr>
+      {% endwith %}
+    {% endfor %}
+  </table>
+  <br/>
+  {% if more_devices_link %}
+  <a href="{{more_devices_link}}"
+    style='font-weight:normal;font-size:small;'>More &gt;&gt;</a> &nbsp;&nbsp;
+  {% endif %}
+</div>
+<table class="schedule-form-table"> {{ add_form.as_table }} </table>
+<input class="kd-button kd-button-red" type="submit" /></form>
+
+
