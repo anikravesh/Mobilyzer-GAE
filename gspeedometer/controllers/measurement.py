@@ -46,7 +46,9 @@ MEASUREMENT_TYPES = [('ping', 'ping'),
                      ('tcpthroughput', 'TCP throughput'),
                      ('rrc', 'RRC inference'),
                      ('pageloadtime', 'Page load time'),
-                     ('video', 'Video QoE'),]
+                     ('video', 'Video QoE'),
+                     ('cronet-http', 'HTTP get via CRONET'),
+                     ('quic-http', 'HTTP get via CRONET using QUIC')]
 
 CDN_TARGETS = ['ec-media.soundcloud.com' , #EdgeCast
                'video-http.media-imdb.com' , #Amazon CloudFront
@@ -197,8 +199,6 @@ class Measurement(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'application/json'
     self.response.out.write(json.dumps(response))
 
-      
-
   def ListMeasurements(self, **unused_args):
     """Handles /measurements REST request."""
 
@@ -341,6 +341,28 @@ class MeasurementType:
           ('profile_4_freq', 'Profile 4 frequency (float)'),
           ('profile_unlimited', 'Unlimited profile frequency (float)'),
           ('headers', 'HTTP headers'), ('method', 'HTTP method')]))
+    elif measurement_type == 'cronet-http':
+        return MeasurementType(
+            'cronet-http', 'HTTP get via CRONET', SortedDict([('url', 'HTTP URL'),
+            ('location_update_distance', 'Location update distance (m)'),
+            ('trigger_location_update', 'Trigger location update (bool)'),
+            ('profile_1_freq', 'Profile 1 frequency (float)'),
+            ('profile_2_freq', 'Profile 2 frequency (float)'),
+            ('profile_3_freq', 'Profile 3 frequency (float)'),
+            ('profile_4_freq', 'Profile 4 frequency (float)'),
+            ('profile_unlimited', 'Unlimited profile frequency (float)'),
+            ('headers', 'HTTP headers'), ('method', 'HTTP method')]))
+    elif measurement_type == 'quic-http':
+        return MeasurementType(
+            'quic-http', 'HTTP get via CRONET using QUIC', SortedDict([('url', 'HTTP URL'),
+            ('location_update_distance', 'Location update distance (m)'),
+            ('trigger_location_update', 'Trigger location update (bool)'),
+            ('profile_1_freq', 'Profile 1 frequency (float)'),
+            ('profile_2_freq', 'Profile 2 frequency (float)'),
+            ('profile_3_freq', 'Profile 3 frequency (float)'),
+            ('profile_4_freq', 'Profile 4 frequency (float)'),
+            ('profile_unlimited', 'Unlimited profile frequency (float)'),
+            ('headers', 'HTTP headers'), ('method', 'HTTP method')]))
     elif measurement_type == 'tcpthroughput':
       return MeasurementType(
           'tcpthroughput', 'TCP throughput',

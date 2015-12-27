@@ -30,7 +30,7 @@ from google.appengine.api import taskqueue
 from gspeedometer import model
 from gspeedometer import config
 from gspeedometer.helpers import util
-from gspeedometer.measurement import dns, http, ping, traceroute
+from gspeedometer.measurement import dns, http, ping, traceroute, quichttp, cronethttp
 from google.appengine.api import mail
 from gspeedometer.controllers import measurement
 
@@ -297,5 +297,9 @@ class MeasurementValidatorFactory:
       return traceroute.Traceroute(measurement.Params(), measurement.Values())
     elif measurement.type == 'http':
       return http.HTTP(measurement.Params(), measurement.Values())
+    elif measurement.type == 'quic-http':
+      return quichttp.QUICHTTP(measurement.Params(), measurement.Values())
+    elif measurement.type == 'cronet-http':
+      return cronethttp.CRONETHTTP(measurement.Params(), measurement.Values())
     else:
       raise RuntimeError("Unknown measurement type %s" % measurement.type)
