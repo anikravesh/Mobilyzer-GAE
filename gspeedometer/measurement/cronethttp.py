@@ -98,7 +98,7 @@ class CRONETHTTP(MeasurementWrapper):
                     results["error_types"].append("fetch_time_invalid")
 
         except KeyError:
-            logging.debug("Missing key for http!")
+            logging.debug("Missing key for cronethttp!")
 
         return results
 
