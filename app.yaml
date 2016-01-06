@@ -1,5 +1,5 @@
 application: openmobiledata
-version: mstuploadtasks
+version: quic
 runtime: python
 api_version: 1
 default_expiration: "600s"

@@ -4,7 +4,7 @@
 
 {% block body %}
 File Format (text/plain)</br></br> Each line specifies a single measurement with following format:
-measurement_type ({ping,traceroute}), count ({-1, 1, 2, ...}), interval_sec (float), target (URL), app_name (MySpeedTest), carrier ({*, at&t, ...}), country_code</br></br>
+measurement_type ({ping,traceroute,dns,http}), count ({-1, 1, 2, ...}), interval_sec (float), target (URL), app_name (MySpeedTest), carrier ({*, at&t, ...}), country_code ({*,US,NZ}), sensitive ({true, false}) </br></br>
 <form method="post" enctype='multipart/form-data' action="/schedule/upload">
 <input type="file" name=tasks_file /> <input type="submit" value="Upload" /><br />
 

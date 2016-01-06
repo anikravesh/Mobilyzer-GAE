@@ -235,23 +235,31 @@ class Schedule(webapp.RequestHandler):
             for task in tasks:
                 items=task.strip().split(',')
                 logging.debug(str(len(items))+" "+str(items))
-                if len(items)!=7:
+                if len(items)!=8:
                     raise ValueError('Error parsing file')
                 measurement_type=items[0].strip()
-                if not measurement_type in ['ping', 'traceroute']:
-                    raise ValueError('Error parsing file: invalid measurement type. Supported measurement types are traceroute and ping ')
+#                 logging.debug("measurement_type: "+measurement_type)
+                if not measurement_type in ['ping', 'traceroute', 'dns', 'http']:
+                    raise ValueError('Error parsing file: invalid measurement type. Supported measurement types are traceroute, ping, http, and dns')
+                if measurement_type=='dns':
+                    measurement_type='dns_lookup'
                 count=int(items[1].strip())
                 interval_sec=float(items[2].strip())
                 target=items[3].strip()
                 app_name=items[4].strip()
                 carrier=items[5].strip()
                 country_code=items[6].strip().lower()
+                sensitive=items[7].lower()
                 t=model.Task()
                 t.type=measurement_type
                 t.interval_sec=interval_sec
                 t.count=count
                 t.user=users.get_current_user()
-                setattr(t, 'mparam_target', target)
+                if measurement_type in ['ping',  'dns', 'traceroute']:
+                    setattr(t, 'mparam_target', target)
+                elif measurement_type in ['http']:
+                    setattr(t, 'mparam_url', target)
+                setattr(t, 'mparam_sensitive', sensitive)
                 setattr(t, 'mcontext_appname', app_name)
                 if carrier!="*":
                     setattr(t, 'mcontext_carrier', carrier)

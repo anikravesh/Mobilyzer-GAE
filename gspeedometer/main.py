@@ -55,53 +55,6 @@ m.connect('/',
           action='Dashboard')
 
 
-# m.connect('/getmeasurements',
-#           controller='measurement:Measurement',
-#           action='GetMeasurementResults')
-
-# m.connect('/video',
-#           controller='measurement:Measurement',
-#           action='GetVideoResults')
-
-# m.connect('/tr',
-#           controller='measurement:Measurement',
-#           action='GetTracerouteResults')
-
-# m.connect('/dev_prop',
-#           controller='measurement:Measurement',
-#           action='GetDeviceProperties')
-
-# m.connect('/read_memcached',
-#           controller='measurement:Measurement',
-#           action='ReadMemcached')
-# 
-# m.connect('/write_memcached',
-#           controller='measurement:Measurement',
-#           action='WriteMemcached')
-
-# m.connect('/plt',
-#           controller='measurement:Measurement',
-#           action='GetPLTResults')
-
-m.connect('/schedule/upload',
-          controller='schedule:Schedule',
-          action='UploadTasks')
-
-m.connect('/admin/getgcmresults',
-          controller='gcm:GCM',
-          action='GetGCMResults')
-
-m.connect('/admin/gcm',
-          controller='gcm:GCM',
-          action='ListDevices')
-
-# m.connect('/active',
-#           controller='gcm:GCM',
-#           action='ActiveDevices')
-
-m.connect('/postgcmmeasurement',
-          controller='gcm:GCM',
-          action='PostGCMMeasurement')
 
 
 m.connect('/about',

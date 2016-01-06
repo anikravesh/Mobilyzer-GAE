@@ -110,6 +110,8 @@ def GetDeviceSchedule(device_properties):
         continue
     if device_properties.request_app=="MySpeedTest":
       continue
+    if device_properties.request_app=="MPTCPController" or device_properties.request_app.replace(" ","")=="handovertracker":
+      continue
     if not task.filter:
       try:
         app_version = float(device_properties.app_version[1:])
@@ -144,6 +146,8 @@ def GetDeviceSchedule(device_properties):
   for dt in device_properties.device_info.devicetask_set:
     dt.delete()
 
+  if device_properties.request_app=="MPTCPController":
+    return matched
 
   # Assign matched tasks to this device
   for task in matched:
@@ -157,15 +161,15 @@ def GetDeviceSchedule(device_properties):
 #       app_version_num=int(device_properties.app_version.replace('.',''))
 
 
-  for cdn_target in CDN_TARGETS:
-      ping_task=model.Task()
-      ping_task.user=users.get_current_user()
-      ping_task.created = datetime.utcnow()
-      ping_task.count=-1
-      ping_task.interval_sec=3600.0
-      ping_task.type="ping"
-      setattr(ping_task, 'mparam_target', cdn_target)
-      matched.add(ping_task)
+#   for cdn_target in CDN_TARGETS:
+#       ping_task=model.Task()
+#       ping_task.user=users.get_current_user()
+#       ping_task.created = datetime.utcnow()
+#       ping_task.count=-1
+#       ping_task.interval_sec=3600.0
+#       ping_task.type="ping"
+#       setattr(ping_task, 'mparam_target', cdn_target)
+#       matched.add(ping_task)
   
    
   logging.debug(str(len(matched)))
